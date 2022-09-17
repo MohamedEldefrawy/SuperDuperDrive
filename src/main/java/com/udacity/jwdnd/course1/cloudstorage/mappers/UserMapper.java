@@ -2,15 +2,9 @@ package com.udacity.jwdnd.course1.cloudstorage.mappers;
 
 import com.udacity.jwdnd.course1.cloudstorage.models.User;
 import org.apache.ibatis.annotations.*;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-/*
- *
- *     public User(String userName, String password, String salt, String firstName, String lastName) {
-
- * */
 @Mapper
 public interface UserMapper {
 
@@ -20,7 +14,7 @@ public interface UserMapper {
     @Insert("insert into users (username,salt,password,firstname,lastname) " +
             "values (#{userName},#{password},#{salt},#{firstName},#{lastName})")
     @Options(useGeneratedKeys = true, keyProperty = "id")
-    void insertUser(User user);
+    Integer insertUser(User user);
 
     @Select("SELECT * FROM USERS")
     List<User> getUsers();
