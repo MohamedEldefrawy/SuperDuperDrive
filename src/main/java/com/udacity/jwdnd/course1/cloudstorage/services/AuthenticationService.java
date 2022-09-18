@@ -1,7 +1,7 @@
 package com.udacity.jwdnd.course1.cloudstorage.services;
 
 import com.udacity.jwdnd.course1.cloudstorage.mappers.UserMapper;
-import com.udacity.jwdnd.course1.cloudstorage.models.User;
+import com.udacity.jwdnd.course1.cloudstorage.model.User;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -11,26 +11,27 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 
 @Service
-public class AuthService implements AuthenticationProvider {
+public class AuthenticationService implements AuthenticationProvider {
     private final HashService hashService;
-    private UserMapper userMapper;
+    private final UserMapper userMapper;
 
-    public AuthService(HashService hashService, UserMapper userMapper) {
+    public AuthenticationService(HashService hashService, UserMapper userMapper) {
         this.hashService = hashService;
         this.userMapper = userMapper;
     }
 
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
-        String username = authentication.getName();
+        String userName = authentication.getName();
         String password = authentication.getCredentials().toString();
 
-        User user = userMapper.getUser(username);
+        User user = userMapper.getUser(userName);
+
         if (user != null) {
             String encodedSalt = user.getSalt();
             String hashedPassword = hashService.getHashedValue(password, encodedSalt);
             if (user.getPassword().equals(hashedPassword)) {
-                return new UsernamePasswordAuthenticationToken(username, password, new ArrayList<>());
+                return new UsernamePasswordAuthenticationToken(userName, password, new ArrayList<>());
             }
         }
 
@@ -40,6 +41,5 @@ public class AuthService implements AuthenticationProvider {
     @Override
     public boolean supports(Class<?> authentication) {
         return authentication.equals(UsernamePasswordAuthenticationToken.class);
-
     }
 }
