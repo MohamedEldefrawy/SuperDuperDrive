@@ -32,8 +32,9 @@ public class UserService {
         return userMapper.insert(new User(null, user.getUserName(), hashedPassword, encodedSalt, user.getFirstName(), user.getLastName()));
     }
 
-    List<File> getUserFiles(Integer userId) {
-        return this.userMapper.selectFiles(userId);
+    public List<File> getUserFiles(String userName) {
+        User selectedUser = this.userMapper.getUser(userName);
+        return this.userMapper.selectFiles(selectedUser.getUserId());
     }
 
     public User getUser(String username) {
