@@ -7,10 +7,12 @@ import com.udacity.jwdnd.course1.cloudstorage.services.UserService;
 import org.springframework.security.core.annotation.CurrentSecurityContext;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -27,7 +29,7 @@ public class FileController {
     }
 
     @PostMapping("/upload")
-    public String upload(Model model, @RequestParam("fileUpload") MultipartFile file, @CurrentSecurityContext(expression = "authentication?.name")
+    public ModelAndView upload(ModelMap model, @RequestParam("fileUpload") MultipartFile file, @CurrentSecurityContext(expression = "authentication?.name")
     String userName) {
 
         if (!file.isEmpty()) {
@@ -35,6 +37,7 @@ public class FileController {
             if (selectedFile == null) {
                 StringBuilder names = this.fileService.uploadFile(file);
                 model.addAttribute("msg", "Uploaded files: " + names.toString());
+                model.addAttribute("error", false);
                 byte[] fileData;
                 try {
                     fileData = file.getBytes();
@@ -44,11 +47,14 @@ public class FileController {
                 User selectedUser = this.userService.getUser(userName);
                 Integer result = this.fileService.saveFile(new File(file.getOriginalFilename(), file.getContentType(), String.valueOf(file.getSize()), selectedUser.getUserId(), fileData));
                 System.out.println(result + " files inserted");
+            } else {
+                model.addAttribute("msg", "Cannot upload file twice");
+                model.addAttribute("error", true);
             }
         }
 
 
-        return "redirect:home";
+        return new ModelAndView("redirect:/home", model);
     }
 
     @GetMapping("/download")
