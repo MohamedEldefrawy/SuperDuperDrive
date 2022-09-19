@@ -7,7 +7,6 @@ import com.udacity.jwdnd.course1.cloudstorage.services.UserService;
 import org.springframework.security.core.annotation.CurrentSecurityContext;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -30,17 +29,26 @@ public class FileController {
     @PostMapping("/upload")
     public String upload(Model model, @RequestParam("fileUpload") MultipartFile file, @CurrentSecurityContext(expression = "authentication?.name")
     String userName) {
-        StringBuilder names = this.fileService.uploadFile(file);
-        model.addAttribute("msg", "Uploaded files: " + names.toString());
-        byte[] fileData;
-        try {
-            fileData = file.getBytes();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+
+        if (!file.isEmpty()) {
+            File selectedFile = this.fileService.getFile(file.getOriginalFilename());
+            if (selectedFile == null) {
+                StringBuilder names = this.fileService.uploadFile(file);
+                model.addAttribute("msg", "Uploaded files: " + names.toString());
+                byte[] fileData;
+                try {
+                    fileData = file.getBytes();
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+                User selectedUser = this.userService.getUser(userName);
+                Integer result = this.fileService.saveFile(new File(file.getOriginalFilename(), file.getContentType(), String.valueOf(file.getSize()), selectedUser.getUserId(), fileData));
+                System.out.println(result + " files inserted");
+            }
         }
-        User selectedUser = this.userService.getUser(userName);
-        this.fileService.saveFile(new File(file.getName(), file.getContentType(), String.valueOf(file.getSize()), selectedUser, fileData));
-        return "home";
+
+
+        return "redirect:home";
     }
 
     @GetMapping("/download")
@@ -50,10 +58,11 @@ public class FileController {
         return "home";
     }
 
-    @DeleteMapping("/delete")
+    @GetMapping("/delete")
     public String delete(Model model, @RequestParam("fileName") String fileName) {
         File selectedFile = this.fileService.getFile(fileName);
-        this.fileService.deleteFile(selectedFile.getFileId());
-        return "home";
+        Integer result = this.fileService.deleteFile(selectedFile.getFileId());
+        System.out.println(result + " files deleted");
+        return "redirect:home";
     }
 }

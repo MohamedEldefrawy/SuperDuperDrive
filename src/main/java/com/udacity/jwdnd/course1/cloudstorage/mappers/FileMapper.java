@@ -10,7 +10,7 @@ public interface FileMapper {
     @Select("select * from files where filename = #{fileName}")
     File select(String fileName);
 
-    @Insert("insert into files (filename,contenttype,filesize,userid,filedata) values (#{fileName},#{contentType},#{fileSize},#{user.id},#{fileData})")
+    @Insert("insert into files (filename,contenttype,filesize,userid,filedata) values (#{fileName},#{contentType},#{fileSize},#{userId},#{fileData})")
     @Options(useGeneratedKeys = true, keyProperty = "fileId")
     Integer insert(File file);
 

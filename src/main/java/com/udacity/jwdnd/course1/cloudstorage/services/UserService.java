@@ -6,6 +6,7 @@ import com.udacity.jwdnd.course1.cloudstorage.model.User;
 import org.springframework.stereotype.Service;
 
 import java.security.SecureRandom;
+import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
 
@@ -29,12 +30,15 @@ public class UserService {
         random.nextBytes(salt);
         String encodedSalt = Base64.getEncoder().encodeToString(salt);
         String hashedPassword = hashService.getHashedValue(user.getPassword(), encodedSalt);
-        return userMapper.insert(new User(null, user.getUserName(), hashedPassword, encodedSalt, user.getFirstName(), user.getLastName()));
+        return userMapper.insert(new User(user.getUserName(), hashedPassword, encodedSalt, user.getFirstName(), user.getLastName()));
     }
 
     public List<File> getUserFiles(String userName) {
         User selectedUser = this.userMapper.getUser(userName);
-        return this.userMapper.selectFiles(selectedUser.getUserId());
+        if (selectedUser != null)
+            return this.userMapper.selectFiles(selectedUser.getUserId());
+        else
+            return new ArrayList<File>();
     }
 
     public User getUser(String username) {

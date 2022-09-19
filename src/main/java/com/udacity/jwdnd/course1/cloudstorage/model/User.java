@@ -15,8 +15,7 @@ public class User {
     private List<File> files;
 
 
-    public User(Integer userId, String userName, String password, String salt, String firstName, String lastName) {
-        this.userId = userId;
+    public User(String userName, String password, String salt, String firstName, String lastName) {
         this.userName = userName;
         this.password = password;
         this.salt = salt;

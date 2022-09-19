@@ -21,6 +21,7 @@ public class HomeController {
     public String home(Model model, @CurrentSecurityContext(expression = "authentication?.name")
     String userName) {
 
+
         List<File> userFiles = this.userService.getUserFiles(userName);
         model.addAttribute("files", userFiles);
         return "home";
