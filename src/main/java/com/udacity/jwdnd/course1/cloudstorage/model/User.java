@@ -13,6 +13,7 @@ public class User {
     private String lastName;
 
     private List<File> files;
+    private List<Note> notes;
 
 
     public User(String userName, String password, String salt, String firstName, String lastName) {
@@ -21,14 +22,6 @@ public class User {
         this.salt = salt;
         this.firstName = firstName;
         this.lastName = lastName;
-    }
-
-    public List<File> getFiles() {
-        return files;
-    }
-
-    public void setFiles(List<File> files) {
-        this.files = files;
     }
 
     public Integer getUserId() {

@@ -57,10 +57,9 @@ public class FileController {
     }
 
     @GetMapping("/download")
-    public String download(Model model, @RequestParam("fileName") String fileName, HttpServletResponse response) {
+    public void download(Model model, @RequestParam("fileName") String fileName, HttpServletResponse response) {
         File selectedFile = this.fileService.getFile(fileName);
         this.fileService.downloadFile(response, selectedFile);
-        return "home";
     }
 
     @GetMapping("/delete")

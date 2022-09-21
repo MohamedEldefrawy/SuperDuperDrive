@@ -18,9 +18,6 @@ public class NoteService {
         return this.noteMapper.insert(note);
     }
 
-    public List<Note> selectNotes(Integer userId) {
-        return this.noteMapper.selectNotes(userId);
-    }
 
     public Integer updateNote(Note newNote) {
         return this.noteMapper.edit(newNote);
@@ -28,5 +25,9 @@ public class NoteService {
 
     public Integer delete(Integer noteId) {
         return this.noteMapper.delete(noteId);
+    }
+
+    public List<Note> selectUserNotes(Integer userId) {
+        return this.noteMapper.selectNotes(userId);
     }
 }

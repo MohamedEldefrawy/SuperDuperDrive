@@ -1,14 +1,11 @@
 package com.udacity.jwdnd.course1.cloudstorage.services;
 
 import com.udacity.jwdnd.course1.cloudstorage.mappers.UserMapper;
-import com.udacity.jwdnd.course1.cloudstorage.model.File;
 import com.udacity.jwdnd.course1.cloudstorage.model.User;
 import org.springframework.stereotype.Service;
 
 import java.security.SecureRandom;
-import java.util.ArrayList;
 import java.util.Base64;
-import java.util.List;
 
 @Service
 public class UserService {
@@ -33,13 +30,6 @@ public class UserService {
         return userMapper.insert(new User(user.getUserName(), hashedPassword, encodedSalt, user.getFirstName(), user.getLastName()));
     }
 
-    public List<File> getUserFiles(String userName) {
-        User selectedUser = this.userMapper.getUser(userName);
-        if (selectedUser != null)
-            return this.userMapper.selectFiles(selectedUser.getUserId());
-        else
-            return new ArrayList<File>();
-    }
 
     public User getUser(String username) {
         return userMapper.getUser(username);

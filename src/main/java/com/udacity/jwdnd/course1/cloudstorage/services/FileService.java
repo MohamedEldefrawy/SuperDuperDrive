@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
 
 @Service
 public class FileService {
@@ -57,5 +58,9 @@ public class FileService {
 
     public File getFile(String fileName) {
         return this.fileMapper.select(fileName);
+    }
+
+    public List<File> selectUserFiles(Integer userId) {
+        return this.fileMapper.selectUserFiles(userId);
     }
 }

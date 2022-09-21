@@ -3,8 +3,9 @@ package com.udacity.jwdnd.course1.cloudstorage.model;
 public class Note {
     private Integer noteId;
     private String title;
-    private String description;
     private Integer userId;
+
+    private String description;
 
 
     public Note(String title, String description, Integer userId) {
@@ -30,7 +31,7 @@ public class Note {
     }
 
     public String getDescription() {
-        return description;
+        return this.description;
     }
 
     public void setDescription(String description) {
