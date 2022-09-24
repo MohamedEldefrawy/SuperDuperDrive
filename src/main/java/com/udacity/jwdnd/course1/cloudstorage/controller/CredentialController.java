@@ -29,6 +29,7 @@ public class CredentialController {
     public ModelAndView saveCredential(ModelMap model, @ModelAttribute("newCredential") Credential newCredential, @RequestParam("mode") Integer mode, Authentication authentication) {
         User selectedUser = this.userService.getUser(authentication.getName());
         newCredential.setUserId(selectedUser.getUserId());
+        newCredential.setKey("p@s$w0rd");
         Integer result = 0;
         switch (mode) {
             case 0: {

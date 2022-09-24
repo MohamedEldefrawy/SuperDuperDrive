@@ -33,7 +33,7 @@ public class HomeController {
     }
 
     @GetMapping("/home")
-    public String home(Model model, @ModelAttribute("newNote") Note newNote, Authentication authentication, @RequestParam Optional<Boolean> error, @RequestParam Optional<String> msg) {
+    public String home(Model model, @ModelAttribute("newNote") Note newNote, @ModelAttribute("newCredential") Credential newCredential, Authentication authentication, @RequestParam Optional<Boolean> error, @RequestParam Optional<String> msg) {
         var selectedUser = this.userService.getUser(authentication.getName());
 
         List<File> userFiles = this.fileService.selectUserFiles(selectedUser.getUserId());
