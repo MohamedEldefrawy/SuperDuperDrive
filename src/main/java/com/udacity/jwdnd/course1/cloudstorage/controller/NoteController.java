@@ -4,15 +4,17 @@ import com.udacity.jwdnd.course1.cloudstorage.model.Note;
 import com.udacity.jwdnd.course1.cloudstorage.model.User;
 import com.udacity.jwdnd.course1.cloudstorage.services.NoteService;
 import com.udacity.jwdnd.course1.cloudstorage.services.UserService;
+import com.udacity.jwdnd.course1.cloudstorage.util.FormValidation;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
+
+import java.util.ArrayList;
 
 @Controller
 public class NoteController {
@@ -29,13 +31,22 @@ public class NoteController {
         User selectedUser = this.userService.getUser(authentication.getName());
         newNote.setUserId(selectedUser.getUserId());
         Integer result = 0;
+        var formValues = new ArrayList<String>();
+        formValues.add(newNote.getTitle());
+        formValues.add(newNote.getDescription());
         switch (mode) {
             case 0: {
-                result = this.noteService.insert(newNote);
+                if (FormValidation.isValid(formValues))
+                    result = this.noteService.insert(newNote);
+                else
+                    result = 0;
                 break;
             }
             case 1: {
-                result = this.noteService.updateNote(newNote);
+                if (FormValidation.isValid(formValues))
+                    result = this.noteService.updateNote(newNote);
+                else
+                    result = 0;
                 break;
             }
         }
@@ -52,7 +63,7 @@ public class NoteController {
     }
 
     @GetMapping("/notes/delete")
-    public String deleteNote(Model model, @RequestParam("noteId") Integer noteId) {
+    public String deleteNote(@RequestParam("noteId") Integer noteId) {
         this.noteService.delete(noteId);
         return "redirect:/home";
     }

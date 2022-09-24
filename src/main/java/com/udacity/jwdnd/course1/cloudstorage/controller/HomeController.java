@@ -45,8 +45,6 @@ public class HomeController {
         model.addAttribute("credentials", userCredentials);
 
         if (error.isPresent() || msg.isPresent()) {
-            System.out.println(error.get());
-            System.out.println(msg.get());
             model.addAttribute("msg", msg.get());
             model.addAttribute("error", error.get());
         }

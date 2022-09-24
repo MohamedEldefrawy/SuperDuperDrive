@@ -9,9 +9,11 @@ import java.util.List;
 @Service
 public class CredentialService {
     private final CredentialMapper credentialMapper;
+    private final EncryptionService encryptionService;
 
-    public CredentialService(CredentialMapper credentialMapper) {
+    public CredentialService(CredentialMapper credentialMapper, EncryptionService encryptionService) {
         this.credentialMapper = credentialMapper;
+        this.encryptionService = encryptionService;
     }
 
     public Integer insert(Credential credential) {
@@ -27,7 +29,12 @@ public class CredentialService {
     }
 
     public List<Credential> selectUserCredentials(Integer userId) {
-        return this.credentialMapper.selectCredentials(userId);
+        var userCredentials = this.credentialMapper.selectCredentials(userId);
+        for (var credential : userCredentials
+        ) {
+            credential.setEncryptedPassword(this.encryptionService.encryptValue(credential.getPassword(), credential.getKey()));
+        }
+        return userCredentials;
     }
 
     public Credential selectCredential(Integer credentialId) {
