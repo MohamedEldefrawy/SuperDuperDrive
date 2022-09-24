@@ -14,6 +14,7 @@ public class User {
 
     private List<File> files;
     private List<Note> notes;
+    private List<Credential> credentials;
 
 
     public User(String userName, String password, String salt, String firstName, String lastName) {
