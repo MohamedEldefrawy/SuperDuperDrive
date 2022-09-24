@@ -163,7 +163,7 @@
                         <tr th:each="credential:${credentials}" id="${credential.credentialId}">
                             <td>
                                 <button type="button" class="btn btn-success"
-                                        th:onclick="showNoteModal(1,[[${credential.credentialId}]],[[ ${credential.url}]],[[${credential.userName}]],[[${credential.password}]])">
+                                        th:onclick="showCredentialModal(1,[[${credential.credentialId}]],[[ ${credential.url}]],[[${credential.userName}]],[[${credential.password}]])">
                                     Edit
                                 </button>
 
