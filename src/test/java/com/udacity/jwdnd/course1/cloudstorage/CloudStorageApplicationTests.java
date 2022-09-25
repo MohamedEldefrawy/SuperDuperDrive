@@ -237,6 +237,77 @@ class CloudStorageApplicationTests {
     }
 
     @Test
+    public void testCredentialCreation() {
+        var webDriverWait = new WebDriverWait(driver, 2);
+        var loginPage = new LoginPage(driver);
+        var homepage = new HomePage(driver);
+        var signUpPage = new SignupPage(driver);
+
+        createUserAndLogin(webDriverWait, loginPage, signUpPage, "testCredentialCreation", "testCredentialCreationFlow", "CredentialCreation", "CredentialCreation");
+        homepage.navCredentials();
+        webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.id("btnAddNewCredential")));
+        homepage.openAddNewCredentialModal();
+        webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.id("credential-url")));
+        homepage.createNewCredential();
+        webDriverWait.until(ExpectedConditions.titleContains("Home"));
+        homepage.navCredentials();
+        webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.id("btnAddNewCredential")));
+        Assertions.assertTrue(driver.getPageSource().contains(homepage.getUrl()));
+    }
+
+    @Test
+    public void testEditCredential() {
+        var webDriverWait = new WebDriverWait(driver, 2);
+        var loginPage = new LoginPage(driver);
+        var homepage = new HomePage(driver);
+        var signUpPage = new SignupPage(driver);
+
+        createUserAndLogin(webDriverWait, loginPage, signUpPage, "testCredentialEdit", "testCredentialEditFlow", "CredentialEdit", "CredentialEdit");
+        homepage.navCredentials();
+        webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.id("btnAddNewCredential")));
+        homepage.openAddNewCredentialModal();
+        webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.id("credential-url")));
+        homepage.createNewCredential();
+        webDriverWait.until(ExpectedConditions.titleContains("Home"));
+        homepage.navCredentials();
+        webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.id("btnAddNewCredential")));
+
+        var btnEdit = driver.findElement(By.id("btnEdit-1"));
+        homepage.openEditCredential(btnEdit);
+        webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.id("credential-url")));
+        homepage.editCredential();
+        webDriverWait.until(ExpectedConditions.titleContains("Home"));
+        homepage.navCredentials();
+        webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.id("btnAddNewCredential")));
+        Assertions.assertTrue(driver.getPageSource().contains(homepage.getUrl() + "edit/"));
+    }
+
+    public void testDeleteCredential() {
+        var webDriverWait = new WebDriverWait(driver, 2);
+        var loginPage = new LoginPage(driver);
+        var homepage = new HomePage(driver);
+        var signUpPage = new SignupPage(driver);
+
+        createUserAndLogin(webDriverWait, loginPage, signUpPage, "testCredentialDelete", "testCredentialDeleteFlow", "CredentialDelete", "CredentialDelete");
+        homepage.navCredentials();
+        webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.id("btnAddNewCredential")));
+        homepage.openAddNewCredentialModal();
+        webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.id("credential-url")));
+        homepage.createNewCredential();
+        webDriverWait.until(ExpectedConditions.titleContains("Home"));
+        homepage.navCredentials();
+        webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.id("btnAddNewCredential")));
+
+        var btnDelete = driver.findElement(By.id("btnDelete-2"));
+        homepage.deleteCredential(btnDelete);
+        webDriverWait.until(ExpectedConditions.titleContains("Home"));
+        homepage.navCredentials();
+        webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.id("btnAddNewCredential")));
+        Assertions.assertFalse(driver.getPageSource().contains(homepage.getUrl()));
+
+    }
+
+    @Test
     public void testNoteCreation() {
         var webDriverWait = new WebDriverWait(driver, 2);
         var loginPage = new LoginPage(driver);
@@ -272,7 +343,7 @@ class CloudStorageApplicationTests {
         homepage.navToNotes();
         webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.id("btnAddNewNote")));
 
-        WebElement btnEdit = driver.findElement(By.id("btnEdit-2"));
+        var btnEdit = driver.findElement(By.id("btnEdit-2"));
         homepage.openEditNoteModal(btnEdit);
         webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.id("note-description")));
         homepage.editNote();
