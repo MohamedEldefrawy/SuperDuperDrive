@@ -13,7 +13,7 @@
     <div id="logoutDiv">
         <form action="#" method="POST" th:action="@{/logout}">
             <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
-            <button type="submit" class="btn btn-secondary float-right">Logout</button>
+            <button id="logout" type="submit" class="btn btn-secondary float-right">Logout</button>
         </form>
     </div>
     <div id="contentDiv" style="clear: right;">
@@ -127,7 +127,7 @@
                                         <label for="note-description" class="col-form-label">Description</label>
                                         <textarea th:field="*{description}" class="form-control" name="noteDescription"
                                                   id="note-description"
-                                                  rows="5" maxlength="1000" required></textarea>
+                                                  rows="5" maxlength="999" required></textarea>
                                     </div>
                                     <button id="noteSubmit" type="submit" class="d-none"></button>
                                 </form>

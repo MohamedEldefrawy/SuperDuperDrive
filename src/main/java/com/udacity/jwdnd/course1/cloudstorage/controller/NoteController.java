@@ -56,7 +56,7 @@ public class NoteController {
             model.addAttribute("error", false);
 
         } else {
-            model.addAttribute("msg", "Cannot add note");
+            model.addAttribute("msg", "Please enter valid input");
             model.addAttribute("error", true);
         }
         return new ModelAndView("redirect:/home", model);
