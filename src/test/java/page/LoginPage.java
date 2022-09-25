@@ -19,11 +19,11 @@ public class LoginPage {
         PageFactory.initElements(webDriver, this);
     }
 
-    public void userLogin() {
+    public void userLogin(String userName, String password) {
         this.txtUserName.click();
-        this.txtUserName.sendKeys("admin");
+        this.txtUserName.sendKeys(userName);
         this.txtPassword.click();
-        this.txtPassword.sendKeys("admin");
+        this.txtPassword.sendKeys(password);
         this.btnLogin.click();
     }
 }

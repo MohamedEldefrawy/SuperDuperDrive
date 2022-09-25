@@ -24,18 +24,18 @@ public class SignupPage {
     }
 
 
-    public void createUser() {
+    public void createUser(String firstname, String lastName, String userName, String password) {
         this.txtFirstName.click();
-        this.txtFirstName.sendKeys("Mohamed");
+        this.txtFirstName.sendKeys(firstname);
 
         this.txtLastName.click();
-        this.txtLastName.sendKeys("Ahmed");
+        this.txtLastName.sendKeys(lastName);
 
         this.txtUserName.click();
-        this.txtUserName.sendKeys("admin");
+        this.txtUserName.sendKeys(userName);
 
         this.txtPassword.click();
-        this.txtPassword.sendKeys("admin");
+        this.txtPassword.sendKeys(password);
 
         this.btnSignup.click();
     }

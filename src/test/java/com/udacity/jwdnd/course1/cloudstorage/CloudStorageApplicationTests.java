@@ -226,14 +226,8 @@ class CloudStorageApplicationTests {
         var signUpPage = new SignupPage(driver);
         var loginPage = new LoginPage(driver);
         var homePage = new HomePage(driver);
-
-        WebDriverWait webDriverWait = new WebDriverWait(driver, 2);
-        driver.get(HOST + this.port + "/signup");
-        webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.id("buttonSignUp")));
-        signUpPage.createUser();
-        webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.id("login-button")));
-        loginPage.userLogin();
-        webDriverWait.until(ExpectedConditions.titleContains("Home"));
+        var webDriverWait = new WebDriverWait(driver, 2);
+        createUserAndLogin(webDriverWait, loginPage, signUpPage, "testAuth", "testAuthFlow", "auth", "auth");
         Assertions.assertTrue(driver.getPageSource().contains("Upload a New File"));
         homePage.logout();
         webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.id("login-button")));
@@ -241,5 +235,86 @@ class CloudStorageApplicationTests {
         webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.id("login-button")));
         Assertions.assertTrue(driver.getPageSource().contains("Login"));
     }
+
+    @Test
+    public void testNoteCreation() {
+        var webDriverWait = new WebDriverWait(driver, 2);
+        var loginPage = new LoginPage(driver);
+        var homepage = new HomePage(driver);
+        var signUpPage = new SignupPage(driver);
+
+        createUserAndLogin(webDriverWait, loginPage, signUpPage, "testNoteCreation", "testNoteCreationFlow", "noteCreation", "noteCreation");
+        homepage.navToNotes();
+        webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.id("btnAddNewNote")));
+        homepage.openAddNewNoteModal();
+        webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.id("note-description")));
+        homepage.createNewNote();
+        webDriverWait.until(ExpectedConditions.titleContains("Home"));
+        homepage.navToNotes();
+        webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.id("btnAddNewNote")));
+        Assertions.assertTrue(driver.getPageSource().contains(homepage.getTestNoteTitle()));
+    }
+
+    @Test
+    public void testNoteEdit() {
+        var webDriverWait = new WebDriverWait(driver, 2);
+        var loginPage = new LoginPage(driver);
+        var homepage = new HomePage(driver);
+        var signUpPage = new SignupPage(driver);
+
+        createUserAndLogin(webDriverWait, loginPage, signUpPage, "testEditNote", "testEditNoteFlow", "editNote", "editNote");
+        homepage.navToNotes();
+        webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.id("btnAddNewNote")));
+        homepage.openAddNewNoteModal();
+        webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.id("note-description")));
+        homepage.createNewNote();
+        webDriverWait.until(ExpectedConditions.titleContains("Home"));
+        homepage.navToNotes();
+        webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.id("btnAddNewNote")));
+
+        WebElement btnEdit = driver.findElement(By.id("btnEdit-2"));
+        homepage.openEditNoteModal(btnEdit);
+        webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.id("note-description")));
+        homepage.editNote();
+        webDriverWait.until(ExpectedConditions.titleContains("Home"));
+        homepage.navToNotes();
+        webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.id("btnAddNewNote")));
+        Assertions.assertTrue(driver.getPageSource().contains(homepage.getTestNoteTitle() + " edited"));
+    }
+
+    @Test
+    public void testNoteDelete() {
+        var webDriverWait = new WebDriverWait(driver, 2);
+        var loginPage = new LoginPage(driver);
+        var homepage = new HomePage(driver);
+        var signUpPage = new SignupPage(driver);
+
+        createUserAndLogin(webDriverWait, loginPage, signUpPage, "testDeleteNote", "testDeleteNoteFlow", "deleteNote", "deleteNote");
+        homepage.navToNotes();
+        webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.id("btnAddNewNote")));
+        homepage.openAddNewNoteModal();
+        webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.id("note-description")));
+        homepage.createNewNote();
+        webDriverWait.until(ExpectedConditions.titleContains("Home"));
+        homepage.navToNotes();
+        webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.id("btnAddNewNote")));
+
+        WebElement btnDelete = driver.findElement(By.id("btnDelete-1"));
+        homepage.deleteNote(btnDelete);
+        webDriverWait.until(ExpectedConditions.titleContains("Home"));
+        homepage.navToNotes();
+        webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.id("btnAddNewNote")));
+        Assertions.assertFalse(driver.getPageSource().contains(homepage.getTestNoteTitle()));
+    }
+
+    private void createUserAndLogin(WebDriverWait webDriverWait, LoginPage loginPage, SignupPage signUpPage, String firstname, String lastName, String userName, String password) {
+        driver.get(HOST + this.port + "/signup");
+        webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.id("buttonSignUp")));
+        signUpPage.createUser(firstname, lastName, userName, password);
+        webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.id("login-button")));
+        loginPage.userLogin(userName, password);
+        webDriverWait.until(ExpectedConditions.titleContains("Home"));
+    }
+
 
 }
